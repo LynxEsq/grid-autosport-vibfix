@@ -513,15 +513,34 @@ static void *telemetry_thread(void *arg) {
         return NULL;
     }
 
+    // 200ms receive timeout — zero motors quickly when telemetry stops
+    struct timeval tv_timeout = { .tv_sec = 0, .tv_usec = 200000 };
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv_timeout, sizeof(tv_timeout));
+
     viblog("UDP listener ready on 127.0.0.1:20777");
 
     uint8_t buf[1024];
     int pkt_count = 0;
+    int was_active = 0;  // were we receiving telemetry?
 
     while (1) {
         ssize_t n = recv(sock, buf, sizeof(buf), 0);
-        if (n <= 0) { usleep(1000); continue; }
+        if (n <= 0) {
+            // Timeout or error — no telemetry packet for 200ms
+            if (was_active && (g_motor_left > 0 || g_motor_right > 0)) {
+                viblog("Telemetry timeout, stopping motors");
+                g_motor_left = 0;
+                g_motor_right = 0;
+                g_impact_hold = 0;
+                if (g_xbox_device) {
+                    send_xbox_rumble(g_xbox_device, 0, 0, 0, 0);
+                }
+            }
+            was_active = 0;
+            continue;
+        }
 
+        was_active = 1;
         pkt_count++;
         int num_floats = (int)(n / sizeof(float));
         float *data = (float *)buf;
