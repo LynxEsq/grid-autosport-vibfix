@@ -1,0 +1,43 @@
+# GRID Autosport Vibration Fix — Configuration
+# =============================================
+# Values are percentages (0-200). Default = 100.
+# Changes take effect on next game restart.
+#
+# 100 = default strength, 50 = half, 200 = double, 0 = disabled.
+
+# === Overall ===
+overall_strength = 100        # Global multiplier for all effects
+
+# === Impact (crashes, car contacts, wall hits) ===
+impact_strength = 100         # Crash/hit intensity
+impact_hold = 85              # How long impact sustains (0=instant, 99=very long)
+
+# === Surface (road roughness, curbs, gravel) ===
+surface_strength = 100        # Road roughness intensity
+
+# === Cornering (lateral G-force in turns) ===
+cornering_strength = 100      # Turn force feedback intensity
+
+# === Wheel Slip (skid, spin, lock-up) ===
+slip_strength = 100           # Wheel slip/skid intensity
+
+# === Engine Rumble (high RPM vibration) ===
+engine_strength = 100         # Engine vibration intensity
+
+# === Braking (brake pedal feedback) ===
+brake_strength = 100          # Brake feedback intensity
+
+# === General ===
+test_on_start = true          # Test vibration when controller detected
+dead_zone = 3                 # Motor values below this are zeroed (0-10)
+log_telemetry = false         # Log detailed telemetry data (verbose, for debugging only)
+
+# === Advanced: Thresholds ===
+# Uncomment and change only if you know what you're doing.
+# Lower threshold = more sensitive, higher = less sensitive.
+#
+# impact_delta_threshold = 0.7   # G-force spike sensitivity (default 0.7, lower = more sensitive)
+# impact_abs_threshold = 5.0     # Wall crash G-force threshold (default 5.0)
+# surface_threshold = 60         # Suspension velocity threshold (default 60)
+# engine_rpm_threshold = 4000    # RPM to start engine rumble (default 4000)
+# slip_threshold = 3.0           # Wheel slip detection threshold (default 3.0)
